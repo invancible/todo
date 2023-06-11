@@ -1,0 +1,86 @@
+<%- include('partials/head') %>
+</head>
+
+<body>
+    <!-- component -->
+    <div class="w-full h-screen bg-gray-100 pt-8">
+        <div class="bg-white p-3 max-w-md mx-auto">
+            <div class="text-center">
+                <h1 class="text-3xl font-bold">ToDo App</h1>
+                <form class="mt-4 flex" action="/todos" method="post">
+                    <input
+                        name="title"
+                        class="w-80 border-b-2 border-gray-500 text-black"
+                        type="text" placeholder="Enter your task here" 
+                    />
+                    <button
+                        type="submit"
+                        class="ml-2 border-2 border-green-500 p-2 text-green-500 hover:text-white hover:bg-green-500 rounded-lg flex"
+                    >   
+                        <svg class="h-6 w-6"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="9" />  <line x1="9" y1="12" x2="15" y2="12" />  <line x1="12" y1="9" x2="12" y2="15" /></svg>
+                        <span>Add</span>
+                    </button>
+                </form>        
+            </div>
+            <div class="mt-8">
+                <ul>
+                    <% if (todos.length > 0) { %>
+                     <% todos.forEach(todo => { %>
+                        <li class="p-2 rounded-lg" >
+                            <div class="flex align-middle flex-row justify-between">
+                                <form class="p-2" action="/todos/update" method="post">
+                                    <input type="hidden" name="id" value="<%= todo._id %>">
+                                    <input type="checkbox" class="h-6 w-6" <%= todo.isCompleted ? 'checked' : '' %> onclick="submitForm(event)"/>
+                                </form>
+                                <div class="p-2">
+                                    <p class="text-lg <%= todo.isCompleted ? 'line-through text-gray-400' : '' %> "><%= todo.title %></p>
+                                </div>
+                                <form action="/todos/delete" method="post">
+                                    <input type="hidden" name="id" value="<%= todo._id %>">
+                                    <button 
+                                    type="submit"
+                                    class="flex text-red-500 border-2 border-red-500 p-2 rounded-lg">
+                                        <svg class="h-6 w-6 text-red-500"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <circle cx="12" cy="12" r="10" />  <line x1="15" y1="9" x2="9" y2="15" />  <line x1="9" y1="9" x2="15" y2="15" /></svg>
+                                        <span>Remove</span>
+                                    </button>
+                                </form>
+                            </div>
+                            <hr class="mt-2"/>
+                        </li>
+                     <% }) %>
+                    <% } else { %>
+                        <h3 class="text-center italic">Nothing Todo yet.</h3>
+                    <% } %>
+                    
+                </ul>
+            </div>
+            <div class="mt-8">
+                <a href="/todos/completed/delete">
+                    <button 
+                        class="border-2 border-red-500 p-2 text-red-500"
+                    >Clear Completed Task</button>
+                </a>
+                <a href="/todos/reset">
+                    <button 
+                        class="border-2 border-indigo-500 p-2 text-indigo-500 ml-4"
+                    >Reset Todo List</button>
+                </a>
+            </div>
+        </div>    
+    </div>
+    
+
+<script>
+    function submitForm(event) {
+        // Prevent the default behavior of the checkbox
+        event.preventDefault();
+        
+        // Get the form element
+        var form = event.target.closest('form');
+        
+        // Submit the form
+        form.submit();
+    }
+    </script>
+<%- include('partials/end') %>
+    
